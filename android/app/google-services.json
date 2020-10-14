@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1008577523375",
+    "firebase_url": "https://ny-times-93102.firebaseio.com",
+    "project_id": "ny-times-93102",
+    "storage_bucket": "ny-times-93102.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008577523375:android:48cedade54556a276aee5a",
+        "android_client_info": {
+          "package_name": "com.matheus.newyorktimes_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1008577523375-tgnv3ipnum79ffm3rg7m16d3miburbpv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7bLcUW8I-4nNGzfkN8WAacGsVNhoqsnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1008577523375-tgnv3ipnum79ffm3rg7m16d3miburbpv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
