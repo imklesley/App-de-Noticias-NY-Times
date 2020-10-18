@@ -7,20 +7,22 @@ class AddGaleria extends StatefulWidget {
 }
 
 class _AddGaleriaState extends State<AddGaleria> {
+  //Controller que permite pegar o contúdo do form
   TextEditingController _linkImageController = TextEditingController();
+
+  //Permite validar o form
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<String> _galeria = [];
-
-
+  //Somente para mostrar snackbar de erro, caso o usuário não insira pelo menos duas imagens
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-
+  //A lista que irá conter todos os links de cada imagem adicionada
+  List<String> _galeria = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         appBar: AppBar(
           elevation: 10,
           shadowColor: Colors.grey,
@@ -36,6 +38,7 @@ class _AddGaleriaState extends State<AddGaleria> {
         ),
         backgroundColor: Colors.black,
         body: SingleChildScrollView(
+          //Para conseguir "scrollar" a tela quando o teclado for chamado
           child: Form(
             key: _formKey,
             child: Padding(
@@ -57,16 +60,19 @@ class _AddGaleriaState extends State<AddGaleria> {
                         enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white))),
                     style: TextStyle(color: Colors.white, fontSize: 20),
-                    validator: (texto) {
-                      if (texto.isEmpty)
+                    validator: (link) {
+                      if (link.isEmpty)
                         return 'Insira o link da imagem que deseja adicionar!';
+                      else if (!link.contains('https://')) {
+                        return 'Insira uma url válida';
+                      }
                     },
                   ),
                   SizedBox(
                     height: 30,
                   ),
                   Container(
-                    height: 54,
+                    height: 44,
                     child: RaisedButton(
                         color: Colors.white,
                         child: Text(
@@ -79,21 +85,26 @@ class _AddGaleriaState extends State<AddGaleria> {
                         onPressed: () {
                           setState(() {
                             if (_formKey.currentState.validate()) {
+                              //Adicionamos o link da imagem à lista _galeria
                               _galeria.add(_linkImageController.text);
                               _linkImageController.text = '';
+                              //cria-se a snackbar
                               SnackBar snackBar = SnackBar(
                                 content: Text(
-                                  'Imagem inserida com sucesso',
+                                  'Imagem inserida à galeria com sucesso',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 backgroundColor: Colors.green,
                                 duration: Duration(seconds: 4),
                               );
+
+                              //exibe-se a snackbar
                               _scaffoldKey.currentState.showSnackBar(snackBar);
                             }
                           });
                         }),
                   ),
+                  //DIFERENTE DOS OUTROS ADDS
                   SizedBox(
                     height: 80,
                   ),
@@ -127,15 +138,15 @@ class _AddGaleriaState extends State<AddGaleria> {
                                 urlImagem,
                                 fit: BoxFit.cover,
                                 height: 230,
-                              ))
-                          .toList(),
+                              )).toList(),
+
                     ),
                   ),
                   SizedBox(
                     height: 60,
                   ),
                   Container(
-                    height: 54,
+                    height: 44,
                     child: RaisedButton(
                         color: Colors.white,
                         child: Text(
@@ -146,20 +157,22 @@ class _AddGaleriaState extends State<AddGaleria> {
                               fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
+                          //verificamos se a _galeria possui mais de um elemento, pois caso haja menos não faz sentido ser uma galeria
                           if (_galeria.length > 1) {
                             Navigator.pop(context,
                                 {'tipo': 'galeria', 'valor': _galeria});
                           } else {
+                            //seja menor que 1, criamos um snack que fala pro usuário inserir mais imagens
                             SnackBar snackBar = SnackBar(
                               content: Text(
-                                'Adicione mais uma imagem !',
+                                'Adicione mais imagens!',
                                 style: TextStyle(color: Colors.white),
                               ),
                               backgroundColor: Colors.redAccent,
                               duration: Duration(seconds: 4),
                             );
+                            //Exibimimos o snackbar
                             _scaffoldKey.currentState.showSnackBar(snackBar);
-
                           }
                         }),
                   ),

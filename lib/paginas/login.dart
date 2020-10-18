@@ -16,7 +16,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Caso o cadastro ocorra bem
+    //Caso o cadastro tudo ocorra bem
     VoidCallback sucesso() {
       SnackBar snackBar = SnackBar(
         content: Text('Usuário Entrou !'),
@@ -56,22 +56,22 @@ class Login extends StatelessWidget {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
-        actions: [
-          FlatButton(
-            child: Text(
-              'Criar Conta',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-            ),
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Cadastro()));
-            },
-            highlightColor: Colors.grey,
-          )
-        ],
+        // actions: [
+        //   FlatButton(
+        //     child: Text(
+        //       'Criar Conta',
+        //       style: TextStyle(
+        //           color: Colors.white,
+        //           fontSize: 18,
+        //           fontWeight: FontWeight.bold),
+        //     ),
+        //     onPressed: () {
+        //       Navigator.push(
+        //           context, MaterialPageRoute(builder: (context) => Cadastro()));
+        //     },
+        //     highlightColor: Colors.grey,
+        //   )
+        // ],
       ),
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
@@ -109,6 +109,10 @@ class Login extends StatelessWidget {
                       height: 380,
                       width: 350,
                       child: ScopedModelDescendant<UsuarioAdm>(
+                        //Quando o pressionar em entrar, chama-se a função "entrar"
+                        // que está dentro do nosso model. Nessa função a variável
+                        // "carregando" ela passa a ser true, logo a nossa
+                        // tela vai sumir com os forms e vai ficar exibindo somente um circular progress indicator
                         builder: (context, child, model) {
                           if (model.carregando) {
                             return Center(
@@ -120,6 +124,7 @@ class Login extends StatelessWidget {
                             );
                           } else {
                             return Form(
+                              //Key do form que permite verificar se o form está validado
                               key: _formKey,
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -131,7 +136,9 @@ class Login extends StatelessWidget {
                                       padding: const EdgeInsets.fromLTRB(
                                           20, 5, 20, 10),
                                       child: TextFormField(
-                                        keyboardType: TextInputType.emailAddress,
+                                        //Para colocar o @ no teclado
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                         controller: _emailController,
                                         textAlign: TextAlign.center,
                                         cursorColor: Colors.black,
@@ -192,7 +199,7 @@ class Login extends StatelessWidget {
                                         validator: (senha) {
                                           if (senha.isEmpty)
                                             return 'Insira sua senha !';
-                                          else if (senha.length < 6)
+                                          else if (senha.length < 8)
                                             return 'Senha inválida !';
                                         },
                                       ),
@@ -202,54 +209,72 @@ class Login extends StatelessWidget {
                                       child: Container(
                                         alignment: Alignment.centerRight,
                                         child: FlatButton(
-                                            padding: EdgeInsets.zero,
-                                            onPressed: () {
-                                              if (_emailController
-                                                  .text.isEmpty) {
-                                                SnackBar snackBar = SnackBar(
-                                                  content: Text(
-                                                      'Insira seu email para recuperar senha.'),
-                                                  backgroundColor: Colors.red,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                    Radius.circular(12.0),
-                                                  )),
-                                                  duration:
-                                                      Duration(seconds: 3),
-                                                );
-
-                                                _scaffoldKey.currentState
-                                                    .showSnackBar(snackBar);
-                                              } else {
-                                                SnackBar snackBar = SnackBar(
-                                                  content: Text(
-                                                      'Um link de recuperação foi enviado para seu email.'),
-                                                  backgroundColor: Colors.green,
-                                                  duration:
-                                                      Duration(seconds: 3),
-                                                  shape: RoundedRectangleBorder(
+                                          child: Text('Esquecí minha senha'),
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            if (_emailController.text.isEmpty) {
+                                              SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    'Insira seu email para recuperar senha.'),
+                                                backgroundColor: Colors.red,
+                                                shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.all(
-                                                      Radius.circular(12.0),
-                                                    ),
+                                                  Radius.circular(12.0),
+                                                )),
+                                                duration: Duration(seconds: 3),
+                                              );
+
+                                              _scaffoldKey.currentState
+                                                  .showSnackBar(snackBar);
+                                            } else if (!_emailController.text
+                                                .contains('@')) {
+                                              SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    'Coloque um email válido para recuperar sua senha!'),
+                                                backgroundColor: Colors.red,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                  Radius.circular(12.0),
+                                                )),
+                                                duration: Duration(seconds: 3),
+                                              );
+
+                                              //Exibe snackbar
+                                              _scaffoldKey.currentState
+                                                  .showSnackBar(snackBar);
+                                            } else {
+                                              //caso o email esteja colocado e seja válido pode continuar com o processo de recuperação de senmha
+                                              SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    'Um link de recuperação foi enviado para seu email.'),
+                                                backgroundColor: Colors.green,
+                                                duration: Duration(seconds: 3),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(12.0),
                                                   ),
-                                                );
-                                                model.recuperarSenha(
-                                                    _emailController.text);
-                                                _scaffoldKey.currentState
-                                                    .showSnackBar(snackBar);
-                                                Future.delayed(
-                                                        Duration(seconds: 3))
-                                                    .then((value) {});
-                                              }
-                                            },
-                                            child: Text('Esquecí minha senha')),
+                                                ),
+                                              );
+
+                                              model.recuperarSenha(
+                                                  _emailController.text);
+
+                                              _scaffoldKey.currentState
+                                                  .showSnackBar(snackBar);
+                                              Future.delayed(
+                                                      Duration(seconds: 3))
+                                                  .then((value) {});
+                                            }
+                                          },
+                                        ),
                                       ),
                                     ),
                                     SizedBox(
                                       height: 50,
-                                    ),
+                            ),
                                     Container(
                                         height: 44,
                                         width: 150,

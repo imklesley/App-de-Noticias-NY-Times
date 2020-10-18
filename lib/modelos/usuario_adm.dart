@@ -22,11 +22,11 @@ class UsuarioAdm extends Model {
     return resposta;
   }
 
-  //Fazer com que ao entrar no app sejam carregados os dados do usuário
+  //Fazer com que ao entrar no app sejam carregados os dados do usuário, sobreescreve-se o método que é chamado pelo flutter assim que o app é inicializado
   @override
   void addListener(VoidCallback listener) {
     super.addListener(listener);
-
+    //método que carrega o usuário atual, caso tenha.
     carregaUsuarioAtual();
     notifyListeners();
   }
@@ -37,19 +37,25 @@ class UsuarioAdm extends Model {
       @required senha,
       @required VoidCallback sucesso,
       @required VoidCallback falhou}) async {
+    //Avisa que o app entrou em estado de espera
     carregando = true;
     notifyListeners();
+
+    //gambiarra pra fazer o circular progrss indicator aparecer pelo menos
+    // um segundo. isso foi colocado pois na hr do dev estava simplesmente
+    // pulando o circularPI.
     await Future.delayed(Duration(seconds: 1));
+
+    //Chama-se a função que realiza o login usando email e senha
     _auth
         .signInWithEmailAndPassword(email: email, password: senha)
-        .then((user) async {
-      //Caso dê tudo certo
-      //Salva o usuário logado
+        .then((user) async {      //Caso dê tudo certo
+
+      //Salva o usuário logado localmente
       _user = user.user;
       sucesso();
       //Carrega os dados do usuário que estão no firebase
       await carregaUsuarioAtual();
-
       carregando = false;
       notifyListeners();
     }).catchError((error) {
@@ -58,10 +64,6 @@ class UsuarioAdm extends Model {
       carregando = false;
       notifyListeners();
     });
-
-    carregando = false;
-
-    notifyListeners();
   }
 
   //Cria-se um novo usuário usando email e senha, e salva-se todas as informações do usuário, com exceção da senha.
@@ -111,10 +113,13 @@ class UsuarioAdm extends Model {
     notifyListeners();
   }
 
+  //Recuperação de senha, basta passar uma string que representa o email
   void recuperarSenha(String email) {
     _auth.sendPasswordResetEmail(email: email);
   }
 
+
+  //SÓ UTILIZADO NA FUNÇÃO DE CADASTRO
   //Cria uma coleção com o id do usuário(retorno do firebase) e salvas as demais informações inseridas pelo usuário no form de cadastro
   Future<Null> salvaDados(Map<String, dynamic> dados) async {
     await FirebaseFirestore.instance
@@ -127,10 +132,14 @@ class UsuarioAdm extends Model {
     notifyListeners();
   }
 
+
+
   //carrega o usuário atual e suas informações
   Future<Null> carregaUsuarioAtual() async {
     // var _user é nula? se sim, vamo verificar se o _auth possui algum usuário salvo
-    if (_user == null) _user = _auth.currentUser;
+    if (_user == null) {
+      _user = _auth.currentUser;
+    }
     //Agora verificamos a hipótese de cima
     if (_user != null) {
       //se deu certo e os dados dele é nulo buscamos os dados do usuário no firebase
@@ -139,46 +148,67 @@ class UsuarioAdm extends Model {
             .collection('administradores')
             .doc(_user.uid)
             .get();
+        //atribui-=se os dados recebido pelo firebase e coloca-se em dados_usuario
         dados_usuario = dados.data();
       }
     }
+    //Então notifico todos os elementos da tela que usam essa informação
     notifyListeners();
   }
 
+
+
+  // AQUI SE ENCONTRA O NOSSO CRUD,COM EXCEÇÃO DO READ
+
+  //CREATE
+  //Pegamos o map com as informações da notícia, e enviamos para o cloudfirestore
   Future<Null> enviaNovaNoticia(Map<String, dynamic> dadosNoticia) {
+    //Avisa o app que entramos em estado de espera
     carregando = true;
     notifyListeners();
 
+    //Entramos na coleção "noticias" e adicionamos a notícia criada
     FirebaseFirestore.instance
         .collection('noticias')
-        // .doc(dadosNoticia['tipo_noticia'])
-        // .collection('feed')
         .add(dadosNoticia);
 
+    //Avisamos que não está mais em estado de espera, isso para parar o circularPI
     carregando = false;
     notifyListeners();
   }
 
+
+  //DELETE
+  //Realiza-se a remoção da noticia do cloudfirestore
   Future<Null> deletarNoticia(String noticiaId) {
+    //Avisa o app que entramos em estado de espera
     carregando = true;
     notifyListeners();
 
+    //Entramos na coleção 'noticias', e então entramos no documento noticiaId
     FirebaseFirestore.instance.collection('noticias').doc(noticiaId).delete();
 
+    //Avisamos que não está mais em estado de espera, isso para parar o circularPI
     carregando = false;
     notifyListeners();
   }
 
+
+  //UPDATE
+  //Realiza-se o update da notícia em questão
   Future<Null> atualizarNoticia(
       Map<String, dynamic> dadosNoticia, String noticiaId) {
     carregando = true;
     notifyListeners();
 
+    //Aqui rola a atualização
     FirebaseFirestore.instance
         .collection('noticias')
         .doc(noticiaId)
         .update(dadosNoticia);
 
+
+    //Avisamos que não está mais em estado de espera, isso para parar o circularPI
     carregando = false;
     notifyListeners();
   }

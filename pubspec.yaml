@@ -28,21 +28,30 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+  #Permite colocar de forma facilitada o icone do launcher do app
   flutter_launcher_icons: ^0.8.1
+  #Permite colocar de forma facilitada o nome do launcher do app
   flutter_launcher_name: ^0.0.1
+  #BottomNavigator Utilizado
   bottom_navy_bar: ^5.5.0
+  #Repositório de fonts
   font_awesome_flutter: ^8.8.1
+  ##Firebase
+  #Realiza  a conexão do app com o firebase de forma facilitada
   firebase_core: ^0.5.0
+  #Permite acessar e usar métodos dos cloudfirestore
   cloud_firestore: ^0.14.1+2
+  #Permite realizar operações de autenticação no firebase - Cadastro, logins etc
   firebase_auth: ^0.18.1+1
-  firebase_messaging: ^6.0.16
-  firebase_analytics: ^5.0.16
+  ####
+  #Permite usar um placeholder de transparência, para ser utilizado no FadeIn em algumas situações no app
   transparent_image: ^1.0.0
+  #Permite criarmos uma grid de elementos com dimensões diferentes
   flutter_staggered_grid_view: ^0.3.2
+  #Permite guardar os estados da aplicação, nesse caso foi utilizado para realizar operações de auth e as operações do crud. Usado tbm para verificar se está carregando e se o usuário está logado.
   scoped_model: ^1.0.1
-  url_launcher: ^5.5.0
+  #Permite criar carrosseis de forma facilitada
   carousel_pro: ^1.0.0
-  image_picker: ^0.6.7+11
 
 
 
@@ -51,13 +60,13 @@ dev_dependencies:
     sdk: flutter
 
 
-
+#Adiciona-se o icone no launcher
 flutter_icons:
   android: true
   ios: true
   image_path: "logo_simplificado220x225.png"
 
-
+#Adiciona-se um nome no launcher
 flutter_launcher_name:
   name: "NYTimes"
 
@@ -78,6 +87,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
+  #Três imagens usadas no app
   assets:
     - config_app/imagens/logo_fundo_preto_letra_branca.png
     - config_app/imagens/logo_simplificado.png
@@ -109,7 +119,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 
-
+  #Importamos as fonts
   fonts:
     - family: Piazzolla
       fonts:

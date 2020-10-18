@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class Noticia extends StatelessWidget {
+  //Inicializa a nossa classe com os dados da notícia em questão
   final DocumentSnapshot noticiaDados;
-
   Noticia(this.noticiaDados);
 
+
+
   List<Widget> contruirNoticia() {
+
     List<Widget> noticiaConstruida = [
+      //Inicializei a notícia com o título no topo, sempre será assim
       Text(
         noticiaDados['titulo'],
         textAlign: TextAlign.center,
@@ -25,7 +29,8 @@ class Noticia extends StatelessWidget {
       )
     ];
 
-    //Vai percorrer todos os elementos da noticia, verificar o seu tipo, construir o elemento da notícia da forma especificada e adicionar à lista "noticiaConstruida"
+    //Vai percorrer todos os elementos da noticia, verificar o seu tipo,
+    // construir o elemento da notícia da forma especificada e adicionar à lista "noticiaConstruida"
     for (Map<String, dynamic> elemento in noticiaDados['noticia']) {
       if (elemento['tipo'] == 'imagem') {
         var elementoConstruido = FadeInImage.memoryNetwork(
@@ -43,7 +48,7 @@ class Noticia extends StatelessWidget {
             textAlign: TextAlign.justify,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,fontFamily: 'Piazzolla',
+              fontSize: 18,fontFamily: 'Piazzolla',fontWeight: FontWeight.w600,
                 decoration: TextDecoration.none
             ),
           ),
@@ -52,31 +57,33 @@ class Noticia extends StatelessWidget {
       } else if (elemento['tipo'] == 'galeria') {
         var elementoConstruido = Container(
           height: 300,
-          child: Stack(
-            children: [
-              Carousel(
-                borderRadius: true,
-                dotIncreasedColor: Colors.white,
-                dotBgColor: Colors.transparent,
-                dotColor: Colors.black,
-                dotSize: 4,
-                images: elemento['valor'].map((imagem) {
-                  return FadeInImage.memoryNetwork(
-                    placeholder: kTransparentImage,
-                    image: imagem,
-                    fit: BoxFit.cover,
-                    height: 500,
-                  );
-                }).toList(),
-                autoplay: true,
-                autoplayDuration: Duration(seconds: 4),
-              )
-            ],
+          child: Carousel(
+            borderRadius: true,
+            //Cor do botão da imagem atual
+            dotIncreasedColor: Colors.white,
+            //cor de fundo dos indicadores
+            dotBgColor: Colors.transparent,
+            //Cor do btn quando n tiver selecionado
+            dotColor: Colors.black,
+            dotSize: 4,
+            images: elemento['valor'].map((imagem) {
+              return FadeInImage.memoryNetwork(
+                //utilza-se do plugin de transparência
+                placeholder: kTransparentImage,
+                image: imagem,
+                fit: BoxFit.cover,
+                height: 500,
+              );
+            }).toList(),
+            autoplay: true,
+            autoplayDuration: Duration(seconds: 8),
           ),
         );
         noticiaConstruida.add(elementoConstruido);
       }
     }
+    //Agora tudo já construído, ou seja tudo já colocado dentro da lista que
+    // representa a nossa tela construída, retornamos a nossa lista para o nosso listview
     return noticiaConstruida;
   }
 

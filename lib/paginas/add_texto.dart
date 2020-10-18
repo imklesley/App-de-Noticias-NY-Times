@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AddTexto extends StatelessWidget {
-  TextEditingController _linkImageController = TextEditingController();
+  //Controller que permite pegarmos o conteúdo do nosso textformfield
+  TextEditingController _textoController = TextEditingController();
 
+  //Permite que verificamos  a validade do nosso form
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -32,7 +34,7 @@ class AddTexto extends StatelessWidget {
                 TextFormField(
                   cursorColor: Colors.white,
                   textAlign: TextAlign.center,
-                  controller: _linkImageController,
+                  controller: _textoController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       hintText: 'Insira um texto com o conteúdo desejado',
@@ -62,9 +64,7 @@ class AddTexto extends StatelessWidget {
                       ),
                       onPressed: () {
                         if (_formKey.currentState.validate())
-                          Navigator.pop(context, {
-                            'tipo': 'texto',
-                            'valor': _linkImageController.text
+                          Navigator.pop(context, {'tipo': 'texto','valor': _textoController.text
                           });
                       }),
                 ),

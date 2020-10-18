@@ -10,25 +10,31 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class EditaNoticia extends StatefulWidget {
-  final QueryDocumentSnapshot noticia;
 
+  //Inicializar a nossa classe com a notícia que desejamos editar
+  final QueryDocumentSnapshot noticia;
   EditaNoticia(this.noticia);
 
   @override
-  _EditaNoticiaState createState() => _EditaNoticiaState.fromDocument(noticia);
+  _EditaNoticiaState createState() => _EditaNoticiaState.fromDocument(noticia);//porém precisamos passar os dados da notícia para a classe _EditaNoticiaState que é onde o nosso app é construído
 }
 
 class _EditaNoticiaState extends State<EditaNoticia> {
-  final QueryDocumentSnapshot noticia;
+
+  //EXATAMENTE COMO O DE ADD NOTICIA
   TextEditingController _tituloController = TextEditingController();
   TextEditingController _descricaoController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   int group;
   List<dynamic> elementosNoticia = [];
+  //EXATAMENTE COMO O DE ADD NOTICIA
 
+
+  final QueryDocumentSnapshot noticia;
+
+  //1ª diferença entre a classe que cria notícias
   //Criei um named construtor para inicializar os elementos da notícia;
   _EditaNoticiaState.fromDocument(this.noticia) {
     //Para o Radio, 1-Social,2-Moda
@@ -399,8 +405,9 @@ class _EditaNoticiaState extends State<EditaNoticia> {
                             ),
                           ),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
+                        //2ª diferença em relação a classe que cria noticias
                         Container(
                           height: 44,
                           child: RaisedButton(
@@ -461,6 +468,7 @@ class _EditaNoticiaState extends State<EditaNoticia> {
 
                                     //Coordena o update pelo alertDialog
                                     bool atualizar = false;
+                                    //Criando o AlertDialog
                                     AlertDialog alert = AlertDialog(
                                       title: Text('Atualizar Noticia?'),
                                       content: Text(
@@ -469,7 +477,9 @@ class _EditaNoticiaState extends State<EditaNoticia> {
                                         FlatButton(
                                             onPressed: () {
                                               setState(() {
+                                                //atualiza o valor da var atualizar
                                                 atualizar = true;
+                                                //fecha o AlertDialog
                                                 Navigator.pop(context);
                                               });
                                             },
@@ -491,14 +501,15 @@ class _EditaNoticiaState extends State<EditaNoticia> {
 
                                     //Não estava funcionando antes, pois havia dois "context", o da classe e o do scopedModel.
                                     // Para funcionar só renomeei o context do scopedModel para scopedContext e coloquei no alert e no navigator
-                                   await showDialog(
+                                   //Exibo o AlertDialig, e aguardo a ação do usuário
+                                    await showDialog(
                                         context: scopedContext,
                                         builder: (BuildContext scopedContext) {
                                           return alert;
                                         });
 
-                                    if (atualizar) {
-                                      //método de envio
+                                    if (atualizar == true) {
+                                      //chama-se o método de update
                                       model.atualizarNoticia(
                                           dadosNoticia, noticia.id);
                                       Navigator.pop(context);
@@ -520,3 +531,7 @@ class _EditaNoticiaState extends State<EditaNoticia> {
         ));
   }
 }
+
+
+
+

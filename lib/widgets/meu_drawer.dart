@@ -10,9 +10,11 @@ class MeuDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UsuarioAdm>(
       builder: (context, child, model) {
-        // print(model.dados_usuario);
         return Drawer(
           child: SafeArea(
+            // adapta a tela para as dimensões apropriadas do
+            // aparelho, caso tenha algum elemento que poderia atrapalhar a
+            // vizualização do usuário, ele alinha o widget para que fique visível
             child: Container(
               color: Colors.white,
               child: ListView(
@@ -48,31 +50,35 @@ class MeuDrawer extends StatelessWidget {
                               left: 15.0,
                               bottom: 0.0,
                               child: FlatButton(
-                                  highlightColor: Colors.grey,
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {
-                                    if (model.estaLogado())
-                                      model.sair();
-                                    else
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Login()));
-                                  },
-                                  child: Text(
-                                    !model.estaLogado()
-                                        ? 'Entre para administrar notícias'
-                                        : 'Encerrar sessão',
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                  )),
+                                highlightColor: Colors.grey,
+                                //Não possui espaçamento nas laterais
+                                padding: EdgeInsets.zero,
+                                child: Text(
+                                  !model.estaLogado()
+                                      ? 'Entre para administrar notícias'
+                                      : 'Encerrar sessão',
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18),
+                                ),
+                                onPressed: () {
+                                  if (model.estaLogado())
+                                    model.sair();
+                                  else
+                                    Navigator.push(
+                                        //Direciona o usuário para página de login
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Login()));
+                                },
+                              ),
                             )
                           ],
                         ),
                       )),
+                  //Caso usuário esteja logado, signica que o botão que leva para o painel adm pode aparecer
                   if (model.estaLogado())
                     ListTile(
                       leading: Icon(

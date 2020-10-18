@@ -14,6 +14,7 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        //Botão flutante com o mais no canto inferior direito
         floatingActionButton: FloatingActionButton(
           tooltip: 'Adicionar Nova Notícia',
           child: Icon(Icons.add),
@@ -37,9 +38,12 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
           toolbarHeight: 80,
         ),
         backgroundColor: Colors.black,
+
+        //Observador na coleção desejada, caso essa coleção seja alterada a tela tbm é reconstruida para se adaptar as novas informações
         body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('noticias').snapshots(),
           builder: (context, snapshot) {
+            //Verifica-se ainda n possui os dados, caso n possua mostra circulaprogressindicator
             if (!snapshot.hasData) {
               return Container(
                 height: 50,
@@ -53,6 +57,7 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
             } else {
               return ScopedModelDescendant<UsuarioAdm>(
                   builder: (context, child, model) {
+                    //Caso o "carregando" seja true, mostra circulaprogressindicator
                 if (model.carregando)
                   return Center(
                     child: CircularProgressIndicator(
@@ -61,16 +66,21 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                     ),
                   );
                 else {
-                  return ListView(
+                  return ListView(//Para exisber todas as notícias sem dar overflow na tela, e para conseguir "scrollar" para baixo
                     children: [
-                      SingleChildScrollView(
+                      SingleChildScrollView(//Os elementos de cada coluna podem ficar mt grandes, ou a tela
+                        // do celular pode ser mt pequena, logo permitimos com que o usuário possa "scrollar" a
+                        // nossa tabela na horizontal.
                         scrollDirection: Axis.horizontal,
                         child: Container(
                           color: Colors.grey[700],
-                          child: DataTable(
+                          child: DataTable(//Inicia a nossa tabela
+                            //tamanho da lionha a ser exibido
                               dataRowHeight: 100,
+                              //espaçamento entre as colunas
                               columnSpacing: 70,
                               columns: [
+                                //Coloca-se as nossas respectivas colunas
                                 DataColumn(
                                     label: Text(
                                   'Notícia',
@@ -96,6 +106,9 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                                       fontWeight: FontWeight.bold),
                                 ))
                               ],
+                              //Aqui criamos as nossas linhas. Pegamos os nossos documentos(que representam noticias)
+                              // e então chamamos a função .map que permite separarmos cada elemento da nossa lista,
+                              // construir algo e então reconstruir a nossa lista, agora com as informações que desejamos.
                               rows: snapshot.data.docs
                                   .map((noticia) => DataRow(cells: [
                                         DataCell(Container(
@@ -122,6 +135,7 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                                                     style: TextStyle(
                                                         color: Colors.white)),
                                                 onPressed: () {
+                                                  //Navega/empilha para tela editar
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -134,7 +148,7 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                                                 padding: EdgeInsets.zero,
                                                 child: Text('Deletar',
                                                     style: TextStyle(
-                                                        color: Colors.white)),
+                                                        color: Colors.white,)),
                                                 onPressed: () async {
                                                   //Coordena o delete pelo alertDialog
                                                   bool apagar = false;
@@ -148,7 +162,10 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                                                       FlatButton(
                                                           onPressed: () {
                                                             setState(() {
+                                                              //atualizo a variável apagar, caso essa variável seja true ao final do código
+                                                              // onPressed do botão deletar, logo é chamado a função para deletar a noticia
                                                               apagar = true;
+                                                              //Para fechar o AlertDialog
                                                               Navigator.pop(
                                                                   context);
                                                             });
@@ -159,7 +176,9 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                                                       FlatButton(
                                                           onPressed: () {
                                                             setState(() {
+                                                              //Manti o false, e fechei o AlertDialog
                                                               apagar = false;
+                                                              // fechei o AlertDialog
                                                               Navigator.pop(
                                                                   context);
                                                             });
@@ -171,9 +190,13 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                                                     ],
                                                   );
 
+                                                  //chamo o AlertDialog, já criado, e aguado o usuário realizar alguma operação(Pressionar 'Sim' ou 'Não)
                                                   await showDialog(
                                                       context: context,
                                                       child: alert);
+
+                                                  //Verificar se o usuário mudou o estado da variável "apagar". Caso seja verdadeiro vai e chama
+                                                  // o método de DELETE que está no nosso modelo, isso passando o id da noticia que desejamos apagar.
                                                   if (apagar)
                                                     model.deletarNoticia(
                                                         noticia.id);
@@ -182,8 +205,8 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                                             ],
                                           ),
                                         ))
-                                      ]))
-                                  .toList()),
+                                      ])).toList()),
+
                         ),
                       )
                     ],

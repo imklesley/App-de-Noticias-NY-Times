@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 
 class AddImage extends StatelessWidget {
 
+  //O controller que permite pegarmos os dados textformfield
   TextEditingController _linkImageController = TextEditingController();
 
+  //Key que permite verificar a validade do nosso campo em questão
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          //elevação da appbar
           elevation: 10,
+          //caso elevação maior que 0, mostra uma cor embaixo da appbar. Essa cor é o shadowColor
           shadowColor: Colors.grey,
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Colors.black,
@@ -25,12 +29,11 @@ class AddImage extends StatelessWidget {
         backgroundColor: Colors.black,
         body: Form(
           key: _formKey,
-          child: Padding(
+          child: Padding(// Para dá espaçamento no widget
             padding: const EdgeInsets.all(15.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-
                 TextFormField(
                   cursorColor: Colors.white,
                   textAlign: TextAlign.center,
@@ -44,8 +47,11 @@ class AddImage extends StatelessWidget {
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white))),
                   style: TextStyle(color: Colors.white, fontSize: 20),
-                  validator: (texto) {
-                    if (texto.isEmpty) return 'Insira o link da imagem que deseja adicionar!';
+                  validator: (String link) {
+                    if (link.isEmpty) return 'Insira o link da imagem que deseja adicionar!';
+                    else if(!link.contains('https://')){
+                      return 'Insira uma url válida';
+                    }
                   },
                 ),
                 SizedBox(
@@ -62,12 +68,13 @@ class AddImage extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                       onPressed: () {
-                        if(_formKey.currentState.validate())
+                        if(_formKey.currentState.validate()) {
+                          //Caso esteja tudo okay com o nosso form, então retornamos para página anterior com os dados inseridos. Isso em forma de map.
                           Navigator.pop(context,{'tipo': 'imagem', 'valor': _linkImageController.text});
+                        }
 
                       }),
                 ),
-
               ],
             ),
           ),
