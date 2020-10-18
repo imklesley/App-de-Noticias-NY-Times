@@ -30,7 +30,7 @@ class Moda extends StatelessWidget {
     //Aqui está o plugin que permite adicionar widgets em uma grid personalizada
     return StaggeredGridView.count(
       //Define quantos "Quadros" podemos colocar na horizontal
-      crossAxisCount: 3,
+      crossAxisCount: 2,
       padding: EdgeInsets.all(5),
       //Espaçamento entre os elementos
       mainAxisSpacing: 5,
