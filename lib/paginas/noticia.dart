@@ -37,7 +37,7 @@ class Noticia extends StatelessWidget {
           placeholder: kTransparentImage,
           image: elemento['valor'],
           fit: BoxFit.cover,
-          height: 250,
+          // height: 300,
         );
         noticiaConstruida.add(elementoConstruido);
       } else if (elemento['tipo'] == 'texto') {
