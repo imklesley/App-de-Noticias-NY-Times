@@ -191,9 +191,9 @@ class _PainelAdministrativoState extends State<PainelAdministrativo> {
                                                   );
 
                                                   //chamo o AlertDialog, já criado, e aguado o usuário realizar alguma operação(Pressionar 'Sim' ou 'Não)
-                                                  await showDialog(
-                                                      context: context,
-                                                      child: alert);
+
+                                                  await showDialog(context: context, builder: (_)=>alert);
+
 
                                                   //Verificar se o usuário mudou o estado da variável "apagar". Caso seja verdadeiro vai e chama
                                                   // o método de DELETE que está no nosso modelo, isso passando o id da noticia que desejamos apagar.
